@@ -9,11 +9,14 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Juba {
+    static boolean hadError =false;
     public static void main(String[] args) throws IOException{
 
         private static void runFile(String path) throws IOException{
             byte[] bytes = Files.readAllBytes(Paths.get(path));
             run(new String(bytes, Charset.defaultCharset()));
+            // indicate an error in the exit code.
+            if (hadError) System.exit(65);
         }
         // Add Repl 
         private static void runPrompt() throws IOException{
@@ -24,6 +27,7 @@ public class Juba {
                 String line = reader.readLine();
                 if (line == null) break;
                 run(line);
+                hadError= false;
             }
         }
         private static void run(String source){
