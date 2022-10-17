@@ -57,7 +57,12 @@ class Scanner{
             case '+': addToken(PLUS);break;
             case ';': addToken(SEMICOLON);break;
             case '*': addToken(STAR);break;
+            default:
+            Juba.error(line, "unexpected character.");
+            break;
+
         }
+
     }
 
 
