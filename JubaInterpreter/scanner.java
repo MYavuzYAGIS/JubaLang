@@ -22,22 +22,22 @@ class Scanner{
     List<Token> scanTokens(){
         while(!isAtEnd()){
             start = current;
-            scanToken()
+            scanToken();
         }
         tokens.add(new Token(EOF," ",null,line));
         return tokens;
         
     }
     private boolean isAtEnd(){
-        return current >= source.length()
+        return current >= source.length();
     }
     private char advance(){
-        return source.charAt(current++)
+        return source.charAt(current++);
     }
-    private void addToken(TokenType token){
+    private void addToken(TokenType type){
         addToken(type,null);
     }
-    private void addToken(TokenType token, Object literal){
+    private void addToken(TokenType type, Object literal){
         String text = source.substring(start,current);
         tokens.add(new Token(type,text,literal,line));
     }
@@ -57,15 +57,15 @@ class Scanner{
             case '+': addToken(PLUS);break;
             case ';': addToken(SEMICOLON);break;
             case '*': addToken(STAR);break;
-            case '!' addToken(match('=')? BANG_EQUAL:BANG);break;
-            case '=' addToken(match('=')? EQUAL_EQUAL:EQUAL);break;
-            case '<' addToken(match('=')? LESS_EQUAL:LESS);break;
-            case '>' addToken(match('=')? GREATER_EQUAL:GREATER);break;
+            case '!': addToken(match('=')? BANG_EQUAL:BANG);break;
+            case '=' :addToken(match('=')? EQUAL_EQUAL:EQUAL);break;
+            case '<' :addToken(match('=')? LESS_EQUAL:LESS);break;
+            case '>' :addToken(match('=')? GREATER_EQUAL:GREATER);break;
             case '/':
                 if (match('/')){
                     while (peek()!= '\n' && !isAtEnd()) advance();
                 }else{
-                    addToken(SLASH)
+                    addToken(SLASH);
                 }break;
             case ' ':
             case '\r':
@@ -116,6 +116,18 @@ class Scanner{
     private boolean isDigit(char c){
         return c >='0' && c <= '9';
     }
+
+    private void number(){
+        while(isDigit(peek())) advance();
+
+        if(peek()=='.' && isDigit(peekNext())){
+            advance();
+            while(isDigit(peek())) advance();
+        }
+        addToken(NUMBER,Double.parseDouble(source.substring(start,current)));       
+    }
+    
+
 
 
 
