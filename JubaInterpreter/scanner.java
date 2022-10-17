@@ -67,10 +67,41 @@ class Scanner{
                 }else{
                     addToken(SLASH)
                 }break;
+            case ' ':
+            case '\r':
+            case '\t':break;
+            case '\n': line++; break;
+            case '"': string();break;
+
+
+
+
+
+
             default:
-            Juba.error(line, "unexpected character.");
+                if (isDigit(c)) {
+                    number();
+                } else {
+                    Juba.error(line, "unexpected character.");
+                }
             break;
         }
+    }
+
+    private void string(){
+        while(peek()!= '"' && !isAtEnd()){
+            if(peek()=='\n') line++;
+            advance();
+        }
+        if(isAtEnd()){
+            Juba.error(line, "unterminated string");
+            return;
+        }
+        advance();
+        
+        String value = source.substring(start+1, current-1);
+        addToken(STRING,value);
+    
     }
     private boolean match(char expected){
         if(isAtEnd()) return false;
@@ -78,11 +109,14 @@ class Scanner{
         current++;
         return true;
     }
-
     private char peek(){
         if(isAtEnd()) return '\0';
         return source.charAt(current);
     }
+    private boolean isDigit(char c){
+        return c >='0' && c <= '9';
+    }
+
 
 
 
